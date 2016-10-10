@@ -1056,7 +1056,6 @@ void ChessBoard::TakingMove(Move & MyMove,int side )
 			if(MyMove.castling)
 			{
 					
-				//hashing key in castling not yet
 				if(piece==BlackKing && PiecesList[piece].size()==1)
 				{
 					if(sq2==G8)
@@ -2277,7 +2276,6 @@ int ChessBoard::PawnsStructure(int side)
 
 		if(isolatedPawns>0)
 		{
-			//if endgame (less penalty) (not yet)
 			if(x==FileA)
 			{
 				if(PopBit (FilesBitBoard[x+1] & BitBoardsArray[Pawn])==0)
