@@ -569,59 +569,6 @@ void ChessBoard::PrintBoardData()
 	}
 
 	cout<<endl;
-
-	/*cout<<"Pieces List : "<<endl;
-	for(int x=0;x<=BlackKing;x++)
-	{
-		if(PiecesList[x].size()>0)
-		{
-			for(int y=0;y<PiecesList[x].size();y++)
-				cout<<dec<<PiecesList[x][y]<<" ";
-			cout<<endl;
-		}
-	}*/
-
-	cout<<endl;
-
-	//cout<<"BitBoards : "<<endl;
-	//for(int x=start;x<=end;x++)
-	//{
-	//	if(x==WhitePawn)
-	//		cout<<"WhitePawn : "<<endl;
-	//	if(x==WhiteRook)
-	//		cout<<"WhiteRook : "<<endl;
-	//	if(x==WhiteBishop)
-	//		cout<<"WhiteBishop : "<<endl;
-	//	if(x==WhiteKnight)
-	//		cout<<"WhiteKnight : "<<endl;
-	//	if(x==WhiteQueen)
-	//		cout<<"WhiteQueen : "<<endl;
-	//	if(x==WhiteKing)
-	//		cout<<"WhiteKing : "<<endl;
-
-
-	//	if(x==BlackPawn)
-	//		cout<<"BlackPawn : "<<endl;
-	//	if(x==BlackRook)
-	//		cout<<"BlackRook : "<<endl;
-	//	if(x==BlackBishop)
-	//		cout<<"BlackBishop : "<<endl;
-	//	if(x==BlackKnight)
-	//		cout<<"BlackKnight : "<<endl;
-	//	if(x==BlackQueen)
-	//		cout<<"BlackQueen : "<<endl;
-	//	if(x==BlackKing)
-	//		cout<<"BlackKing : "<<endl;
-
-
-	//	//print(BitBoardsArray[x]);
-
-	//	cout<<endl;
-	//}
-	//	
-	////cout<<"Castling "<<dec<<CastlingPermission<<endl;
-	//cout<<"HashKey : "<<hex<<PositionHashKey<<endl;
-	cout<<endl;
 		
 
 }
@@ -840,6 +787,7 @@ void ChessBoard::MakingMove(Move& MyMove)
 						}
 								
 					}
+					//king moved, can't castle anymore
 					CastlingPermission&=(~(BlackKingSideCasstling|BlackQueenSideCasstling));
 
 				}
@@ -1191,8 +1139,7 @@ void ChessBoard::TakingMove(Move & MyMove,int side )
 			//Normal
 			if(MyMove.CapturedPiece==0 && MyMove.PromotedPiece==0 && MyMove.castling==0 )
 			{
-				//KingRookMovementUndo(piece,sq1);
-
+				
 				//hashing
 				PositionHashKey^=PiecesHashKeysRandomNumbers[piece][sq2];
 				PositionHashKey^=PiecesHashKeysRandomNumbers[piece][sq1];
