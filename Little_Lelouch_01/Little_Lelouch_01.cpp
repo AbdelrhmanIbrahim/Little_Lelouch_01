@@ -259,7 +259,7 @@ ChessBoard::ChessBoard ()
 	SideTotalBitBoardArray[White]=0;
 	SideTotalBitBoardArray[Black]=0;	
 	KnightStart=0xa1100110a;
-
+	AITurn=-1;
 }	
 	
 //setting the boardarray, bitboards and the castling permission
@@ -349,8 +349,11 @@ void ChessBoard::ParseFENAndSetTheBoard(string& FEN)
 	BitBoardsArray[Empty]=~(SideTotalBitBoardArray[White]|SideTotalBitBoardArray[Black]);
 
 	for(int x=0;x<FEN2.size();x++)
-
 	{
+		if(FEN2[x]=='w' && AITurn!=-1)
+			AITurn=White;
+		else if(FEN2[x]=='b' && AITurn!=-1)
+			AITurn=Black;
 		if(FEN2[x]=='k')
 			CastlingPermission|=BlackKingSideCasstling;
 		else if(FEN2[x]=='q')
@@ -2538,6 +2541,7 @@ void ParsePosition(ChessBoard & MyBoard,string fen)
 	 {
 		 if(fen.substr(0,8)=="startpos")
 			MyBoard.ParseFENAndSetTheBoard(START);
+		 
 		 else
 		 {	
 			 string FenStr=fen.substr(4,fen.size()-4);
