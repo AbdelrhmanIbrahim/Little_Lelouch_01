@@ -1510,7 +1510,8 @@ void ChessBoard::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth
 													}
 
 												if((CastlingPermission & WhiteQueenSideCasstling)  && BoardArray[E1]==WhiteKing
-													&& BoardArray[D1]==Empty && BoardArray[C1]==Empty && BoardArray[A1]==WhiteRook
+													&& BoardArray[D1]==Empty && BoardArray[C1]==Empty && BoardArray[B1]==Empty  
+													&& BoardArray[A1]==WhiteRook
 													&&  !IsSquareAttacked(E1,WhichSide^1) && !IsSquareAttacked(D1,WhichSide^1)
 													  &&  !IsSquareAttacked(C1,WhichSide^1) 
 													)
@@ -1554,7 +1555,7 @@ void ChessBoard::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth
 													}
 
 												if((CastlingPermission & BlackQueenSideCasstling)  && BoardArray[E8]==BlackKing
-													&& BoardArray[D8]==Empty && BoardArray[C8]==Empty && BoardArray[A8]==BlackRook
+													&& BoardArray[D8]==Empty && BoardArray[C8]==Empty && BoardArray[B8]==Empty && BoardArray[A8]==BlackRook
 													&&  !IsSquareAttacked(E8,WhichSide^1) && !IsSquareAttacked(D8,WhichSide^1)
 													&&  !IsSquareAttacked(C8,WhichSide^1) 
 													)
@@ -2762,6 +2763,6 @@ int main()
 {	
 	cout<<"Lelouch welcomes you "<<endl;
 	UciLoop();
-
+	
 	return 0;
 }
