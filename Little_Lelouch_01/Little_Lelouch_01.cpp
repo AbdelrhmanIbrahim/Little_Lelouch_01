@@ -2680,7 +2680,7 @@ void UciLoop()
 
 				}
 				else
-					depth=6;
+					depth=5;
 
 				MyBoard.IterativeDeepening(depth,NegINF,PosINF,MyBoard.AITurn,depth);
 				Move _BestMove=BestMoveData[MyBoard.PositionHashKey].BestMove;
