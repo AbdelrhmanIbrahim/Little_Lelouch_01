@@ -350,9 +350,9 @@ void ChessBoard::ParseFENAndSetTheBoard(string& FEN)
 
 	for(int x=0;x<FEN2.size();x++)
 	{
-		if(FEN2[x]=='w' && AITurn!=-1)
+		if(FEN2[x]=='w' && AITurn==-1)
 			AITurn=White;
-		else if(FEN2[x]=='b' && AITurn!=-1)
+		else if(FEN2[x]=='b' && AITurn==-1)
 			AITurn=Black;
 		if(FEN2[x]=='k')
 			CastlingPermission|=BlackKingSideCasstling;
