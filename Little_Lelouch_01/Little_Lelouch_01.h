@@ -53,7 +53,7 @@ int OffBoard=-1,NodesNumber=0,PushingPawnBonusEndGame=35;
 long NODES=0;
 float ALLTIME=0;
 bool Out=false,FirstTime=false,NewGame=true,Right=true,once=false;
-string FENstring="rn2k2r/pRp2p1p/4b3/8/8/8/P1P2PPP/R3KBN1 w - -",last="";
+string FENstring="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -",last="";
 
 
 enum  {Empty,WhitePawn,WhiteKnight,WhiteBishop,WhiteRook,WhiteQueen,WhiteKing,BlackPawn,BlackKnight,BlackBishop,BlackRook,BlackQueen,BlackKing};

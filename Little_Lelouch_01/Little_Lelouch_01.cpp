@@ -351,11 +351,7 @@ void ChessBoard::ParseFENAndSetTheBoard(string& FEN)
 	for(int x=0;x<FEN2.size();x++)
 
 	{
-		if(FEN2[x]=='w')
-			AITurn=White;
-		else if(FEN2[x]=='b')
-			AITurn=Black;
-		else if(FEN2[x]=='k')
+		if(FEN2[x]=='k')
 			CastlingPermission|=BlackKingSideCasstling;
 		else if(FEN2[x]=='q')
 			CastlingPermission|=BlackQueenSideCasstling;
@@ -2639,7 +2635,7 @@ void UciLoop()
 		else if(InputFromGUI.substr(0,2)=="go")
 		{
 			//cout<<last<<endl;
-			if(Right &&   (MyBoard.PiecesList[BlackKing].size()!=0 && MyBoard.PiecesList[WhiteKing].size()!=0 ))
+			if(Right && (MyBoard.PiecesList[BlackKing].size()!=0 && MyBoard.PiecesList[WhiteKing].size()!=0 ))
 			{
 				//check first here if it's a draw or black or white win?
 				int depth=5,sum=0;
@@ -2684,7 +2680,7 @@ void UciLoop()
 
 				}
 				else
-					depth=5;
+					depth=6;
 
 				MyBoard.IterativeDeepening(depth,NegINF,PosINF,MyBoard.AITurn,depth);
 				Move _BestMove=BestMoveData[MyBoard.PositionHashKey].BestMove;
