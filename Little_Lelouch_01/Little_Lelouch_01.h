@@ -415,6 +415,7 @@ public :
 
 	//Castling
 	int CastlingPermission; //4 bits number to permit to both sides castling permissions	
+	bool NoMoreCastling;
 
 	ChessBoard ();	
 	

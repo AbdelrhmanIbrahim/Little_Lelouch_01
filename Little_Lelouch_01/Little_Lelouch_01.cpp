@@ -260,6 +260,7 @@ ChessBoard::ChessBoard ()
 	SideTotalBitBoardArray[Black]=0;	
 	KnightStart=0xa1100110a;
 	AITurn=-1;
+	NoMoreCastling=false;
 }	
 	
 //setting the boardarray, bitboards and the castling permission
@@ -616,7 +617,8 @@ void ChessBoard::MakingMove(Move& MyMove)
 	if(piece!=Empty)
 	{
 			//saving the castle permission 
-			CastlingData[PositionHashKey]=CastlingPermission;
+			if(!NoMoreCastling)
+				CastlingData[PositionHashKey]=CastlingPermission;
 			//from and to positions bitboards
 			long long FromPosition= 1LL<<(63-Board120[MyMove.From]),ToPosition= 1LL<<(63-Board120[MyMove.To]);		
 
@@ -1167,7 +1169,8 @@ void ChessBoard::TakingMove(Move & MyMove,int side )
 			SideTotalBitBoardArray[Black]=(BitBoardsArray[BlackPawn] | BitBoardsArray[BlackKnight] |BitBoardsArray[BlackRook] | BitBoardsArray[BlackBishop] 
 			| BitBoardsArray[BlackQueen] | BitBoardsArray[BlackKing] );
 			BitBoardsArray[Empty]=~(SideTotalBitBoardArray[White] | SideTotalBitBoardArray[Black]);
-			CastlingPermission=CastlingData[PositionHashKey];
+			if(!NoMoreCastling)
+				CastlingPermission=CastlingData[PositionHashKey];
 				
 	}
 
@@ -2686,6 +2689,9 @@ void UciLoop()
 				else
 					depth=5;
 
+				if(MyBoard.CastlingPermission==0)
+					MyBoard.NoMoreCastling=true;
+
 				MyBoard.IterativeDeepening(depth,NegINF,PosINF,MyBoard.AITurn,depth);
 				Move _BestMove=BestMoveData[MyBoard.PositionHashKey].BestMove;
 				
@@ -2694,7 +2700,8 @@ void UciLoop()
 				last=MyBoard.LastMove;
 				MyBoard.MakingMove(_BestMove);
 				MyBoard.PrintBoardData();
-				CastlingData.clear();
+				if(!MyBoard.NoMoreCastling)
+					CastlingData.clear();
 				
 				
 			}	
