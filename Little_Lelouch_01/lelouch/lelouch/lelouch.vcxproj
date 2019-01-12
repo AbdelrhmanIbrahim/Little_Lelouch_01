@@ -28,6 +28,7 @@
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Helpers.cpp" />
+    <ClCompile Include="Knowledge.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Move.cpp" />
   </ItemGroup>

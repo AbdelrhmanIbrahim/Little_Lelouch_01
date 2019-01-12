@@ -19,9 +19,10 @@ namespace helpers
 		int square = (10*rank) + (21+file);
 		return square;
 	}
-	void  GenerateHashKey(Board & MyCB) 
+
+	void  GenerateHashKey(Board & board) 
 	{	
-		if(!FirstTime)
+		if(!board.firstTime)
 		{
 			unsigned long long FinalKey=0;
 			for(int x=Rank1;x<=Rank8;x++)
@@ -29,29 +30,29 @@ namespace helpers
 				for(int y=FileA;y<=FileH;y++)
 				{
 					int Square=FileRankToSquare120(x,y);
-					int piece=MyCB.BoardArray[Square];
+					int piece=board.BoardArray[Square];
 					if(piece!=Empty)
-						FinalKey^=PiecesHashKeysRandomNumbers[piece][Square];
+						FinalKey^=board.PiecesHashKeysRandomNumbers[piece][Square];
 
 				}
 			}
 
-			FinalKey^=CastleKeys[MyCB.CastlingPermission];
+			FinalKey^=board.CastleKeys[board.CastlingPermission];
 
-			MyCB.PositionHashKey=FinalKey;
-			FirstTime=true;
+			board.PositionHashKey=FinalKey;
+			board.firstTime=true;
 		}
 	}
 	//filling the arrays used in the hashing
-	void FillRandomNumbersArray() 
+	void FillRandomNumbersArray(Board& board) 
 	{
 		for(int x=0;x<NumberOfPossiblePieces;x++)
 		{
 			for(int y=0;y<Board120ArraySize;y++)
-				PiecesHashKeysRandomNumbers[x][y]=New64BitNUmber();
+				board.PiecesHashKeysRandomNumbers[x][y]=New64BitNUmber();
 		}
 		for(int x=0;x<16;x++)
-			CastleKeys[x]=New64BitNUmber();
+			board.CastleKeys[x]=New64BitNUmber();
 	}
 	//generating the hashkey
 
@@ -72,14 +73,13 @@ namespace helpers
 		return c;
 	}
 
-
 	//Parsing the position string and getting the input from the GUI
 	void ParsePosition(Board & MyBoard,string fen)
 	{
 
 		string START="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -";
 
-		if(NewGame)
+		if(MyBoard.NewGame)
 		{
 			if(fen.substr(0,8)=="startpos")
 				MyBoard.ParseFENAndSetTheBoard(START);
@@ -91,7 +91,7 @@ namespace helpers
 			}
 		}
 
-		if(NewGame)
+		if(MyBoard.NewGame)
 		{
 			MyBoard.IntializePiecesList();
 			GenerateHashKey(MyBoard);
@@ -118,7 +118,7 @@ namespace helpers
 			}
 			bool allowed=true;
 			//RECHECK
-			if(!NewGame)
+			if(!MyBoard.NewGame)
 			{
 				int file=move[0]-'a';
 				int rank=move[1]-'0'-1;
@@ -127,10 +127,10 @@ namespace helpers
 				if(PiecesColor[MyBoard.BoardArray[sq2]]!=(MyBoard.AITurn^1))
 				{
 					allowed=false;
-					Right=false;
+					MyBoard.Right=false;
 				}
 				else
-					Right=true;
+					MyBoard.Right=true;
 
 			}
 			if(allowed)
@@ -138,25 +138,69 @@ namespace helpers
 				if(move==last)
 				{
 					cout<<" not my turn"<<endl;
-					Right=false;
+					MyBoard.Right=false;
 				}
 				else 
-					Right=true;
+					MyBoard.Right=true;
 
 				MyBoard.GetMoveFromUser(move);
 
-				if(NewGame)
+				if(MyBoard.NewGame)
 					MyBoard.AITurn=Black;
 			}
 		}
 		else
 		{
-			if(NewGame)
+			if(MyBoard.NewGame)
 				MyBoard.AITurn=White;
 		}
 
 		MyBoard.PrintBoardData();
-		NewGame=false;
+		MyBoard.NewGame=false;
 
+	}
+
+	void SetScore(Board& board, Move& move, const Move PV, int piece,int side,int & depth,vector< vector<Move> > & _KillerMoves)
+	{
+		//Capture score
+		move.score=0;
+		if(move.CapturedPiece!=Empty)
+			move.score+=board.PiecesValues[move.CapturedPiece]-(board.PiecesValues[piece]/100) +1000;
+
+		//promoted piece
+		if(move.PromotedPiece!=Empty)
+			move.score+=board.PiecesValues[move.PromotedPiece]+900;
+
+		//positional score
+		if(move.PromotedPiece==Empty && move.CapturedPiece==Empty && depth>=0)
+		{
+			//killers come first
+			if(_KillerMoves[0][depth].From!=_KillerMoves[0][depth].To && move==(_KillerMoves[0][depth]))
+				move.score+=400;
+			else if(_KillerMoves[1][depth].From!=_KillerMoves[1][depth].To && move==(_KillerMoves[1][depth]))
+				move.score+=200;
+			else
+			{
+				//history
+				short history = board.HistoryMoves[piece][Board120[move.To]];
+				if(history!=0)
+					move.score+=history+100;
+				//positional 
+				else
+					move.score+=board.AllPiecesTable[piece][Board120[move.To]]-board.AllPiecesTable[piece][Board120[move.From]];
+			}
+			//most of the time, castling  is a good	move	
+			if(move.castling) 
+				move.score+=10;
+		}	
+		//PV move is the best move found from the previos depth..this is gonna be the first move to search in the next depth, because most probably it's going to be the same best move so we give it a really high score
+		//( we search he best move first -> the more pruning -> I got my estimated best score -> the opponent moves are ordered too so he searches his best move first and if alpha>=beta (his and my score)
+		//we cutoff we don't need to search the rest of moves because the first one was the best searched
+		if(PV.From!=PV.To && move==(PV))
+			move.score+=100000;
+
+		//sorting descending for black and ascending for white
+		if(side==Black)
+			move.score=-move.score;
 	}
 }

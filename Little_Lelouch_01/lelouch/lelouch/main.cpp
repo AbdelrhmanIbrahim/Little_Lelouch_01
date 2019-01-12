@@ -3,13 +3,16 @@
 #include "Knowledge.h"
 #include "Move.h"
 #include <iostream>
+
 using namespace helpers;
 using namespace std;
 
 void UciLoop()
 {
 	Board MyBoard;
-	FillRandomNumbersArray();
+	FillRandomNumbersArray(MyBoard);
+	bool once = false;
+
 	while(1)
 	{
 		string InputFromGUI="";
@@ -26,8 +29,7 @@ void UciLoop()
 		}
 		else if(InputFromGUI.substr(0,2)=="go")
 		{
-			//cout<<last<<endl;
-			if(Right && (MyBoard.PiecesList[BlackKing].size()!=0 && MyBoard.PiecesList[WhiteKing].size()!=0 ))
+			if(MyBoard.Right && (MyBoard.PiecesList[BlackKing].size()!=0 && MyBoard.PiecesList[WhiteKing].size()!=0 ))
 			{
 				//check first here if it's a draw or black or white win?
 				int depth=5,sum=0;
@@ -39,27 +41,27 @@ void UciLoop()
 					depth=6;
 					if(!once)
 					{
-						if(PiecesValues[WhitePawn]==100)
+						if(MyBoard.PiecesValues[WhitePawn]==100)
 						{
-							PiecesValues[WhitePawn]=150;		
-							PiecesValues[BlackPawn]=150;		
+							MyBoard.PiecesValues[WhitePawn]=150;
+							MyBoard.PiecesValues[BlackPawn]=150;
 						}
 
 
 						for(int x=8;x<56;x++)
 						{
 							if(x>=8 && x<48)
-								AllPiecesTable[BlackPawn][x]+=PushingPawnBonusEndGame;	
+								MyBoard.AllPiecesTable[BlackPawn][x]+=PushingPawnBonusEndGame;
 							if(x>=16 && x<56)
-								AllPiecesTable[WhitePawn][x]+=PushingPawnBonusEndGame;												
+								MyBoard.AllPiecesTable[WhitePawn][x]+=PushingPawnBonusEndGame;
 						}
 
 						for(int x=0;x<64;x++)
 						{					
-							MyBoard.MidGameWhiteKingTable[x]=AllPiecesTable[WhiteKing][x];
-							AllPiecesTable[WhiteKing][x]=WhiteKingTableEndGame[x];
-							MyBoard.MidGameBlackKingTable[x]=AllPiecesTable[BlackKing][x];
-							AllPiecesTable[BlackKing][x]=BlackKingTableEndGame[x];
+							MyBoard.MidGameWhiteKingTable[x]=MyBoard.AllPiecesTable[WhiteKing][x];
+							MyBoard.AllPiecesTable[WhiteKing][x]=WhiteKingTableEndGame[x];
+							MyBoard.MidGameBlackKingTable[x]=MyBoard.AllPiecesTable[BlackKing][x];
+							MyBoard.AllPiecesTable[BlackKing][x]=BlackKingTableEndGame[x];
 						}
 					}
 					once=true;
@@ -78,15 +80,15 @@ void UciLoop()
 					MyBoard.NoMoreCastling=true;
 
 				MyBoard.IterativeDeepening(depth,NegINF,PosINF,MyBoard.AITurn,depth);
-				Move _BestMove=BestMoveData[MyBoard.PositionHashKey].BestMove;
+				Move _BestMove=MyBoard.BestMoveData[MyBoard.PositionHashKey].BestMove;
 
 				cout<<"bestmove ";
-				MyBoard.PrintMove(_BestMove);	
+				MyBoard.PrintMove(_BestMove);
 				last=MyBoard.LastMove;
 				MyBoard.MakingMove(_BestMove);
 				MyBoard.PrintBoardData();
 				if(!MyBoard.NoMoreCastling)
-					CastlingData.clear();
+					MyBoard.CastlingData.clear();
 
 
 			}	
@@ -101,31 +103,31 @@ void UciLoop()
 
 			if(once)
 			{
-				PiecesValues[WhitePawn]=100;		
-				PiecesValues[BlackPawn]=100;	
+				MyBoard.PiecesValues[WhitePawn]=100;
+				MyBoard.PiecesValues[BlackPawn]=100;
 
 				for(int x=8;x<56;x++)
 				{
 					if(x>=8 && x<48)
-						AllPiecesTable[BlackPawn][x]-=PushingPawnBonusEndGame;	
+						MyBoard.AllPiecesTable[BlackPawn][x]-=PushingPawnBonusEndGame;	
 					if(x>=16 && x<56)
-						AllPiecesTable[WhitePawn][x]-=PushingPawnBonusEndGame;												
+						MyBoard.AllPiecesTable[WhitePawn][x]-=PushingPawnBonusEndGame;
 				}
 
 
 				for(int x=0;x<64;x++)
 				{	
-					AllPiecesTable[WhiteKing][x]=MyBoard.MidGameWhiteKingTable[x];
-					AllPiecesTable[BlackKing][x]=MyBoard.MidGameBlackKingTable[x];
+					MyBoard.AllPiecesTable[WhiteKing][x]=MyBoard.MidGameWhiteKingTable[x];
+					MyBoard.AllPiecesTable[BlackKing][x]=MyBoard.MidGameBlackKingTable[x];
 				}
 				//cout<<PiecesValues[WhitePawn]<<"<- Pawn material , Pawn table first value (5)-> "<<AllPiecesTable[WhitePawn][16]<<endl;
 				//cout<<" white king table first(20) ->"<<AllPiecesTable[WhiteKing][0]<<endl;
 			}
 
-			NewGame=true;
+			MyBoard.NewGame=true;
 			once=false;
-			Right=true;
-			BestMoveData.clear();
+			MyBoard.Right=true;
+			MyBoard.BestMoveData.clear();
 			MyBoard=Board();
 			//ParsePosition(MyBoard,"startpos");
 
@@ -138,8 +140,8 @@ void UciLoop()
 		else if(InputFromGUI.substr(0,4)=="stop")
 		{
 			cout<<"bestmove ";
-			Move _BestMove=BestMoveData[MyBoard.PositionHashKey].BestMove;
-			MyBoard.PrintMove(_BestMove);		
+			Move _BestMove=MyBoard.BestMoveData[MyBoard.PositionHashKey].BestMove;
+			MyBoard.PrintMove(_BestMove);
 			last=MyBoard.LastMove;
 			MyBoard.MakingMove(_BestMove);
 			MyBoard.PrintBoardData();

@@ -1,7 +1,7 @@
 #include "Board.h"
-#include "BestMove.h"
-#include "Knowledge.h"
 #include "Helpers.h"
+#include "Knowledge.h"
+
 #include <iostream>
 #include <algorithm>
 #include <functional>
@@ -11,27 +11,19 @@ using namespace helpers;
 
 Board::Board()
 {
-
-	//IntializeEveryThing (Globals,PawnBits and both boards for converting etc..)
-	for(int x=0;x<Board120ArraySize;x++)
-		Board120[x]=65;
-
 	for(int x=0;x<Board64ArraySize;x++)
 	{
-		Board64[x]=120;
-
 		if(x<NumberOfPossiblePieces)
 		{
 			for(int y=0;y<Board64ArraySize;y++)
 				HistoryMoves[x][y]=0;
 		}
-
 	}
 
 	//killers
 	for(int x=0;x<2;x++)
 	{
-		vector<Move> LEVELS(MAX_DEPTH);		
+		vector<Move> LEVELS(MAX_DEPTH);
 		KillerMoves.push_back(LEVELS);
 	}
 
@@ -40,44 +32,12 @@ Board::Board()
 	for(int x=0;x<NumberOfPossiblePieces;x++)
 		PiecesList.push_back(v);
 
-
-	//the mapping arrays
-	int sq64=0;
-	for(int x=Rank1;x<=Rank8;x++)
-	{
-		int sq120;
-		for(int y=FileA;y<=FileH;y++)
-		{
-
-			sq120=FileRankToSquare120(x,y);
-			Board64[sq64]=sq120;
-			Board120[sq120]=sq64;
-			sq64++;
-
-		}
-
-	}
-
-	//the ranks,files arrays	
-	sq64=0;
-	for(int x=Rank1;x<=Rank8;x++)
-	{
-		for(int y=FileA;y<=FileH;y++)
-		{
-			SquaresAndTheirRanks[sq64]=x;
-			SquaresAndTheirFiles[sq64]=y;
-			sq64++;
-		}
-	}
-
-
 	//the main board
 	for(int x=0;x<Board64ArraySize;x++)
 	{
 		BoardArray[Board64[x]]=Empty;
 		if(x<13)
-			BitBoardsArray[x]=0;		
-
+			BitBoardsArray[x]=0;
 	}
 
 	//the borders of the board
@@ -92,6 +52,12 @@ Board::Board()
 	for(int x=0;x<2;x++)
 		BoardMaterialValue[x]=Empty;
 
+	for(int i = 0; i < 13; ++i)
+		PiecesValues[i] = cPiecesValues[i];
+
+	for (int r = 0; r < 13; ++r)
+		for (int c = 0; c < 64; ++c)
+			AllPiecesTable[r][c] = cAllPiecesTable[r][c];
 
 	CastlingPermission=15;
 	PositionHashKey=0;
@@ -101,7 +67,8 @@ Board::Board()
 	KnightStart=0xa1100110a;
 	AITurn=-1;
 	NoMoreCastling=false;
-}	
+	firstTime = false;
+}
 
 //setting the boardarray, bitboards and the castling permission
 void Board::ParseFENAndSetTheBoard(string& FEN)
@@ -1090,10 +1057,10 @@ void Board::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth,bool
 									Move m3=Move (sq,sq+Right,BoardArray[sq+Right],N,0,0);
 									Move m4=Move (sq,sq+Right,BoardArray[sq+Right],R,0,0);
 
-									m1.SetScore(PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
-									m2.SetScore(PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
-									m3.SetScore(PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
-									m4.SetScore(PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
+									SetScore(*this,m1,PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
+									SetScore(*this,m2,PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
+									SetScore(*this,m3,PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
+									SetScore(*this,m4,PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
 
 									MovesList.push_back(m1);
 									MovesList.push_back(m2);
@@ -1125,10 +1092,10 @@ void Board::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth,bool
 									Move m3=Move (sq,sq+Left,BoardArray[sq+Left],N,0,0);
 									Move m4=Move (sq,sq+Left,BoardArray[sq+Left],R,0,0);
 
-									m1.SetScore(PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
-									m2.SetScore(PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
-									m3.SetScore(PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
-									m4.SetScore(PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
+									SetScore(*this,m1,PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
+									SetScore(*this,m2,PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
+									SetScore(*this,m3,PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
+									SetScore(*this,m4,PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
 
 									MovesList.push_back(m1);
 									MovesList.push_back(m2);
@@ -1161,10 +1128,10 @@ void Board::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth,bool
 									Move m3=Move (sq,sq+Forward,BoardArray[sq+Forward],N,0,0);
 									Move m4=Move (sq,sq+Forward,BoardArray[sq+Forward],R,0,0);
 
-									m1.SetScore(PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
-									m2.SetScore(PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
-									m3.SetScore(PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
-									m4.SetScore(PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
+									SetScore(*this, m1, PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
+									SetScore(*this, m2, PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
+									SetScore(*this, m3, PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
+									SetScore(*this, m4, PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
 
 									MovesList.push_back(m1);
 									MovesList.push_back(m2);
@@ -1195,7 +1162,7 @@ void Board::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth,bool
 									{
 										TakingMove(m1,WhichSide);
 
-										m1.SetScore(PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
+										SetScore(*this, m1,PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
 
 										MovesList.push_back(m1);
 									}
@@ -1214,7 +1181,7 @@ void Board::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth,bool
 									{
 										TakingMove(m1,WhichSide);
 
-										m1.SetScore(PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
+										SetScore(*this, m1, PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
 
 										MovesList.push_back(m1);
 									}
@@ -1235,7 +1202,7 @@ void Board::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth,bool
 									TakingMove(m1,WhichSide);
 
 
-									m1.SetScore(PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
+									SetScore(*this, m1,PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
 
 									MovesList.push_back(m1);
 								} 
@@ -1253,7 +1220,7 @@ void Board::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth,bool
 								{
 									TakingMove(m1,WhichSide);
 
-									m1.SetScore(PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
+									SetScore(*this, m1,PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
 
 									MovesList.push_back(m1);
 
@@ -1276,7 +1243,7 @@ void Board::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth,bool
 									if(!IsSquareAttacked(PiecesList[King][0],WhichSide^1))
 									{
 										TakingMove(m1,WhichSide);
-										m1.SetScore(PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
+										SetScore(*this, m1,PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
 
 										MovesList.push_back(m1);
 									}
@@ -1287,7 +1254,7 @@ void Board::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth,bool
 								{
 									if(!PawnUnSafe)
 									{
-										m1.SetScore(PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
+										SetScore(*this, m1,PVMove,BoardArray[sq],WhichSide,_depth,KillerMoves);
 										MovesList.push_back(m1);
 									}
 
@@ -1330,7 +1297,7 @@ void Board::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth,bool
 											if(!IsSquareAttacked(MoveSq,WhichSide^1))
 											{
 
-												m1.SetScore(PVMove,ChosenPiece,WhichSide,_depth,KillerMoves);
+												SetScore(*this, m1,PVMove,ChosenPiece,WhichSide,_depth,KillerMoves);
 
 												MovesList.push_back(m1);
 											}
@@ -1346,7 +1313,7 @@ void Board::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth,bool
 												   )
 												{
 													Move Cas=Move (E1,G1,0,0,1,0);
-													Cas.SetScore(PVMove,ChosenPiece,WhichSide,_depth,KillerMoves);
+													SetScore(*this, Cas, PVMove,ChosenPiece,WhichSide,_depth,KillerMoves);
 													MovesList.push_back(Cas);
 													WKflag=true;
 												}
@@ -1359,7 +1326,7 @@ void Board::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth,bool
 												   )
 												{
 													Move Cas=Move (E1,C1,0,0,1,0);
-													Cas.SetScore(PVMove,ChosenPiece,WhichSide,_depth,KillerMoves);
+													SetScore(*this, Cas, PVMove,ChosenPiece,WhichSide,_depth,KillerMoves);
 													MovesList.push_back(Cas);
 													WKflag=true;
 												}
@@ -1377,7 +1344,7 @@ void Board::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth,bool
 											if(!IsSquareAttacked(MoveSq,WhichSide^1))
 											{
 
-												m1.SetScore(PVMove,ChosenPiece,WhichSide,_depth,KillerMoves);
+												SetScore(*this, m1,PVMove,ChosenPiece,WhichSide,_depth,KillerMoves);
 
 												MovesList.push_back(m1);
 											}
@@ -1391,7 +1358,7 @@ void Board::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth,bool
 												   )
 												{
 													Move Cas=Move (E8,G8,0,0,1,0);
-													Cas.SetScore(PVMove,ChosenPiece,WhichSide,_depth,KillerMoves);
+													SetScore(*this, Cas, PVMove,ChosenPiece,WhichSide,_depth,KillerMoves);
 													MovesList.push_back(Cas);
 													BKflag=true;
 												}
@@ -1403,7 +1370,7 @@ void Board::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth,bool
 												   )
 												{
 													Move Cas=Move (E8,C8,0,0,1,0);
-													Cas.SetScore(PVMove,ChosenPiece,WhichSide,_depth,KillerMoves);
+													SetScore(*this, Cas, PVMove,ChosenPiece,WhichSide,_depth,KillerMoves);
 													MovesList.push_back(Cas);
 													BKflag=true;
 												}
@@ -1425,7 +1392,7 @@ void Board::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth,bool
 												if(!IsSquareAttacked(PiecesList[King][0],WhichSide^1))
 												{
 													TakingMove(m1,WhichSide);
-													m1.SetScore(PVMove,ChosenPiece,WhichSide,_depth,KillerMoves);
+													SetScore(*this, m1,PVMove,ChosenPiece,WhichSide,_depth,KillerMoves);
 
 													MovesList.push_back(m1);
 												}
@@ -1441,7 +1408,7 @@ void Board::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth,bool
 													if(!IsSquareAttacked(PiecesList[King][0],WhichSide^1))
 													{
 														TakingMove(m1,WhichSide);
-														m1.SetScore(PVMove,ChosenPiece,WhichSide,_depth,KillerMoves);
+														SetScore(*this, m1,PVMove,ChosenPiece,WhichSide,_depth,KillerMoves);
 
 														MovesList.push_back(m1);
 														Safe=true;
@@ -1454,7 +1421,7 @@ void Board::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth,bool
 												}
 												else
 												{
-													m1.SetScore(PVMove,ChosenPiece,WhichSide,_depth,KillerMoves);
+													SetScore(*this, m1,PVMove,ChosenPiece,WhichSide,_depth,KillerMoves);
 
 													MovesList.push_back(m1);
 												}
@@ -1477,7 +1444,7 @@ void Board::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth,bool
 											if(!IsSquareAttacked(PiecesList[King][0],WhichSide^1))
 											{
 												TakingMove(m1,WhichSide);
-												m1.SetScore(PVMove,ChosenPiece,WhichSide,_depth,KillerMoves);
+												SetScore(*this, m1,PVMove,ChosenPiece,WhichSide,_depth,KillerMoves);
 												MovesList.push_back(m1);
 											}
 											else
@@ -1726,39 +1693,37 @@ long long Board::AlphaBetaSearch(int depth,int alpha,int beta,int Player,int &St
 			BestDepth=depth;
 			BestMove=NewDepthMoves[x];
 			//is the output score of this move better than my current best score? yes..then assign it to alpha and keep searching for the best
-			if(MoveScore>alpha)
+			if (MoveScore > alpha)
 			{
 				//no there are good moves then set zugzwang to false
-				zugzwang=false;
+				zugzwang = false;
 
 				//cutoff (alpha>=beta)
-				if(MoveScore>=beta )
+				if (MoveScore >= beta)
 				{
 					//quiet killers and history moves (killers and history used for ordering normal moves)
-					if(NewDepthMoves[x].CapturedPiece==Empty && NewDepthMoves[x].PromotedPiece==Empty)
+					if (NewDepthMoves[x].CapturedPiece == Empty && NewDepthMoves[x].PromotedPiece == Empty)
 					{
 						//killers got two slots for the same depth..the first gets a high score than the second..cutoffs moves gets a really high score for normal moves. (killers because they "Kill"  some of opponent positions by cutting off subtrees)
-						KillerMoves[1][depth]=KillerMoves[0][depth];
-						KillerMoves[0][depth]=NewDepthMoves[x];
+						KillerMoves[1][depth] = KillerMoves[0][depth];
+						KillerMoves[0][depth] = NewDepthMoves[x];
 
 						//updating the score of the HistoryMoves array..along the iterative deepening search, is this piece on this square caused a cutoff? yes then add the current depth to its score and so on
 						//so it called history it depends on the history of each piece and the squares where it caused a cutoff
-						HistoryMoves[BoardArray[NewDepthMoves[x].From]][Board120[NewDepthMoves[x].To]]+=depth;
+						HistoryMoves[BoardArray[NewDepthMoves[x].From]][Board120[NewDepthMoves[x].To]] += depth;
 					}
 
 					//table where we save the best move,score and the depth for the current position with the hash key that represents the position
-					TranspositionTable(beta,depth,NewDepthMoves[x]);
+					TranspositionTable(beta, depth, NewDepthMoves[x]);
 					//we cutoff by returning beta
 					return beta;
 				}
 
-				alpha=MoveScore;
-				const clock_t begin_time = clock();
+				alpha = MoveScore;
 
-				BestScore2=MoveScore;
-				BestDepth2=depth;
-				BestMove2=NewDepthMoves[x];
-				ALLTIME+=float( clock () - begin_time ) /  CLOCKS_PER_SEC;
+				BestScore2 = MoveScore;
+				BestDepth2 = depth;
+				BestMove2 = NewDepthMoves[x];
 			}
 		}
 
@@ -1831,7 +1796,6 @@ void Board::IterativeDeepening(int depth,int alpha,int beta,int Player,int  TheD
 	for(int x=1;x<=TheDepth;x++)
 	{
 		float Leveltime=0;
-		Out=false;
 
 		Move BestMove(0,0,0,0,false,0);
 
@@ -2022,19 +1986,19 @@ int Board::CenterControl(int side)
 	{
 		for(int y=0;y<PiecesList[x].size();y++)
 		{
-			if(x==WhiteKnight | x==BlackKnight)
+			if(x==WhiteKnight || x==BlackKnight)
 			{
 				Attacks= PopBit( (KnightsMoves(PiecesList[x][y])) & Center) ;
 				CenterCon+=5*Attacks;
 				//cout<<"knight holdign center "<<endl;
 			}
-			else if(x==WhiteBishop | x==BlackBishop)
+			else if(x==WhiteBishop || x==BlackBishop)
 			{
 				Attacks= PopBit( (DMoves(PiecesList[x][y])) & Center) ;
 				CenterCon+=5*Attacks;
 				//cout<<"Bishop holdign center "<<endl;
 			}
-			else if(x==WhiteRook | x==BlackRook)
+			else if(x==WhiteRook || x==BlackRook)
 			{
 				Attacks= PopBit( (HAndVMoves(PiecesList[x][y])) & Center) ;
 				CenterCon+=5*Attacks;

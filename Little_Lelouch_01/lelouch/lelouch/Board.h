@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Move.h"
+#include "BestMove.h"
+
+#include <unordered_map>
 #include <vector>
 
 using namespace std;
@@ -12,11 +15,15 @@ public :
 	//board array represents the current board with all the pieces on it,AITurn sets Lelouch turn,
 	//BitBoardsArray are  bitboards (64 bits numbers) that represent each piece on the board (much easier when evaluating the position and faster),
 	//same for SideTotalBitBoardArray that represents all the occupied squares for each side, KNightStart is a bitboard used to easily find the attacked square by a knight (just shifting the number gets you the squares)
+	bool firstTime;
 	short BoardArray[120];
 	short AITurn;
 	long long BitBoardsArray[13];
 	long long SideTotalBitBoardArray[2];
 	long long KnightStart;
+	long NODES = 0;
+	bool NewGame = true;
+	bool Right = true;
 
 	//HashKey for every positiion used in zobrist hashing
 	unsigned long long PositionHashKey;
@@ -25,8 +32,17 @@ public :
 	//KillerMoves are the moves that cause a "cuttoff" or a "pruning the tree" in alpha-beta search ,memorizing them in a vector 
 	//and used them for moves ordering speeds up the search,a cutoff move is a move that gets you a really good score and really bad for the opponent (worse than his current one)
 	int BoardMaterialValue[2];
+	short HistoryMoves[13][64];
+	unsigned long long CastleKeys[16];
+	unsigned long long PiecesHashKeysRandomNumbers[13][120];
+	int PiecesValues[13];
+	short AllPiecesTable[13][64];
+
 	vector< vector<int> >PiecesList; 
 	vector< vector<Move> > KillerMoves;
+	unordered_map<unsigned long long,BestMoveDataObject> BestMoveData;
+	unordered_map<unsigned long long,short> CastlingData;
+	
 	string LastMove;
 
 	//used in endgame to replace the midgame arrays with the endgame ones
@@ -37,7 +53,7 @@ public :
 	int CastlingPermission; //4 bits number to permit to both sides castling permissions	
 	bool NoMoreCastling;
 
-	Board ();	
+	Board ();
 
 	//setting the board with the given FEN
 	void ParseFENAndSetTheBoard(string& FEN);
