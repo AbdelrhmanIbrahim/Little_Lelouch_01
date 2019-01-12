@@ -19,3 +19,11 @@ l) static evaluation
 
 
 Project is a vs2015 one, future plan to get premake in.
+If there's any crash with chess arena, you can play on the terminal with UCI protocol, till crash gets fixed.
+
+UCI commands :
+1) "ucinewgame" to start a new game
+2) "position " with :
+  a) "startpos moves" + "chessmovenotation" to make your move in the start of the game
+  b) "moves" + "chessmovenotation" to make your move through the game
+3) "go" to make lelouch make its move
