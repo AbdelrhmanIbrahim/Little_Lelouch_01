@@ -127,10 +127,10 @@ namespace helpers
 				if(PiecesColor[MyBoard.BoardArray[sq2]]!=(MyBoard.AITurn^1))
 				{
 					allowed=false;
-					MyBoard.Right=false;
+					MyBoard.r=false;
 				}
 				else
-					MyBoard.Right=true;
+					MyBoard.r=true;
 
 			}
 			if(allowed)
@@ -138,10 +138,10 @@ namespace helpers
 				if(move==last)
 				{
 					cout<<" not my turn"<<endl;
-					MyBoard.Right=false;
+					MyBoard.r=false;
 				}
 				else 
-					MyBoard.Right=true;
+					MyBoard.r=true;
 
 				MyBoard.GetMoveFromUser(move);
 

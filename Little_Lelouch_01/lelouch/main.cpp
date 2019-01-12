@@ -29,7 +29,7 @@ void UciLoop()
 		}
 		else if(InputFromGUI.substr(0,2)=="go")
 		{
-			if(MyBoard.Right && (MyBoard.PiecesList[BlackKing].size()!=0 && MyBoard.PiecesList[WhiteKing].size()!=0 ))
+			if(MyBoard.r && (MyBoard.PiecesList[BlackKing].size()!=0 && MyBoard.PiecesList[WhiteKing].size()!=0 ))
 			{
 				//check first here if it's a draw or black or white win?
 				int depth=5,sum=0;
@@ -73,8 +73,6 @@ void UciLoop()
 					//cout<<"Endgame white king (-50) ->"<<AllPiecesTable[WhiteKing][0]<<endl;
 
 				}
-				else
-					depth=5;
 
 				if(MyBoard.CastlingPermission==0)
 					MyBoard.NoMoreCastling=true;
@@ -126,7 +124,7 @@ void UciLoop()
 
 			MyBoard.NewGame=true;
 			once=false;
-			MyBoard.Right=true;
+			MyBoard.r=true;
 			MyBoard.BestMoveData.clear();
 			MyBoard=Board();
 			//ParsePosition(MyBoard,"startpos");

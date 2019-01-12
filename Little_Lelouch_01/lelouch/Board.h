@@ -23,7 +23,7 @@ public :
 	long long KnightStart;
 	long NODES = 0;
 	bool NewGame = true;
-	bool Right = true;
+	bool r = true;
 
 	//HashKey for every positiion used in zobrist hashing
 	unsigned long long PositionHashKey;

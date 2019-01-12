@@ -326,13 +326,13 @@ bool Board::IsSquareAttacked(int AttackedSquare,int AttackingSide)
 				return true;
 		}
 
-		//king
-		if(PiecesList[King].size()==1)
+		//king (back to this TODO)
+		/*if(PiecesList[King].size()==1)
 		{
 			Attacks|=KingMoves(PiecesList[King] [0]);
 			if(TheSquare & Attacks)
 				return true;
-		}
+		}*/
 
 	}
 
@@ -990,7 +990,7 @@ void Board::GenerateMoves(vector<Move>& MovesList,int WhichSide,int  _depth,bool
 	//All Pieces
 	int END=100,Start=BlackPawn,Ending=BlackKing;
 	int PawnSelected=BlackPawn,PawnColor=Black,Forward=-10,Right=-9,Left=-11,TheRank=Rank2,Q=BlackQueen,B=BlackBishop,R=BlackRook,N=BlackKnight,King=BlackKing,RankBase=Rank7;
-	bool KingAttacked;
+	bool KingAttacked = false;
 
 	if((PiecesList[BlackKing].size()!=0 && PiecesList[WhiteKing].size()!=0))
 	{
