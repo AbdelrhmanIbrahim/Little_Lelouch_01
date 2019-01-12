@@ -16,3 +16,6 @@ g) zobrist hashing
 h) transposition table
 k) hyperbola quintessence
 l) static evaluation
+
+
+Project is a vs2015 one, future plan to get premake in.
