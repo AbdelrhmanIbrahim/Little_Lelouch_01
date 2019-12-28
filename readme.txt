@@ -27,3 +27,7 @@ UCI commands :
   a) "startpos moves" + "chessmovenotation" to make your move in the start of the game
   b) "moves" + "chessmovenotation" to make your move through the game
 3) "go" to make lelouch make its move
+
+
+//TODO
+Fix refactoring bugs : king attacks calc is not right and there's sth wrong in cap moves generation that makes it crash.
