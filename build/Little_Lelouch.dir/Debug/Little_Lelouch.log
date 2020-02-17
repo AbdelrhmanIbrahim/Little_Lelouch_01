@@ -1,0 +1,34 @@
+﻿  Building Custom Rule C:/Users/AbdelrahmanH/Desktop/Little_Lelouch_01/CMakeLists.txt
+  Move.cpp
+  Knowledge.cpp
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(34): warning C4091: 'extern ': ignored on left of 'pieces' when no variable is declared
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(35): warning C4091: 'extern ': ignored on left of 'files' when no variable is declared
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(36): warning C4091: 'extern ': ignored on left of 'ranks' when no variable is declared
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(37): warning C4091: 'extern ': ignored on left of 'sides' when no variable is declared
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(48): warning C4091: 'extern ': ignored on left of 'squares' when no variable is declared
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(49): warning C4091: 'extern ': ignored on left of 'castle' when no variable is declared
+C:\Users\AbdelrahmanH\Desktop\Little_Lelouch_01\Knowledge.cpp(353): warning C4838: conversion from 'unsigned __int64' to 'const __int64' requires a narrowing conversion
+C:\Users\AbdelrahmanH\Desktop\Little_Lelouch_01\Knowledge.cpp(361): warning C4838: conversion from 'unsigned __int64' to 'const __int64' requires a narrowing conversion
+  Helpers.cpp
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(34): warning C4091: 'extern ': ignored on left of 'pieces' when no variable is declared
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(35): warning C4091: 'extern ': ignored on left of 'files' when no variable is declared
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(36): warning C4091: 'extern ': ignored on left of 'ranks' when no variable is declared
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(37): warning C4091: 'extern ': ignored on left of 'sides' when no variable is declared
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(48): warning C4091: 'extern ': ignored on left of 'squares' when no variable is declared
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(49): warning C4091: 'extern ': ignored on left of 'castle' when no variable is declared
+  Board.cpp
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(34): warning C4091: 'extern ': ignored on left of 'pieces' when no variable is declared
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(35): warning C4091: 'extern ': ignored on left of 'files' when no variable is declared
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(36): warning C4091: 'extern ': ignored on left of 'ranks' when no variable is declared
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(37): warning C4091: 'extern ': ignored on left of 'sides' when no variable is declared
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(48): warning C4091: 'extern ': ignored on left of 'squares' when no variable is declared
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(49): warning C4091: 'extern ': ignored on left of 'castle' when no variable is declared
+  main.cpp
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(34): warning C4091: 'extern ': ignored on left of 'pieces' when no variable is declared
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(35): warning C4091: 'extern ': ignored on left of 'files' when no variable is declared
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(36): warning C4091: 'extern ': ignored on left of 'ranks' when no variable is declared
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(37): warning C4091: 'extern ': ignored on left of 'sides' when no variable is declared
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(48): warning C4091: 'extern ': ignored on left of 'squares' when no variable is declared
+c:\users\abdelrahmanh\desktop\little_lelouch_01\Knowledge.h(49): warning C4091: 'extern ': ignored on left of 'castle' when no variable is declared
+  Generating Code...
+  Little_Lelouch.vcxproj -> C:\Users\AbdelrahmanH\Desktop\Little_Lelouch_01\build\Debug\Little_Lelouch.exe
