@@ -1,4 +1,4 @@
-NOT WORKING NOW (Back to the repo later)
+NOT WORKING NOW (fucked up sth after the refactor, back to the repo later)
 
 Little_Lelouch_01 is a simple UCI bitboard chesss engine written in C++.
 
